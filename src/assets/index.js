@@ -12,6 +12,8 @@ import menu from './menu.svg';
 import money from './money.svg';
 import loader from './loader.svg';
 import thirdweb from './thirdweb.png';
+import biust_logo from './biust_logo.png';
+import account_640 from './account_640.png';
 
 export {
   tagType,
@@ -28,4 +30,6 @@ export {
   money,
   loader,
   thirdweb,
+  biust_logo,
+  account_640,
 };
