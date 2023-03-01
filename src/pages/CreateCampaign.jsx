@@ -34,7 +34,6 @@ const CreateCampaign = () => {
           ...form,
           target: ethers.utils.parseUnits(form.target, 18),
         });
-        console.log(form);
         setIsLoading(false);
         navigate('/');
       } else {
@@ -60,7 +59,7 @@ const CreateCampaign = () => {
         <div className="flex flex-wrap gap-[40px]">
           <FormField
             labelName="Your Name *"
-            placeholder="John Doe"
+            placeholder="Enter name"
             inputType="text"
             value={form.name}
             handleChange={(e) => handleFormFieldChange('name', e)}
@@ -75,7 +74,7 @@ const CreateCampaign = () => {
         </div>
         <FormField
           labelName="Story"
-          placeholder="Write your story"
+          placeholder="Give more details about the campaign..."
           isTextArea
           value={form.description}
           handleChange={(e) => handleFormFieldChange('description', e)}

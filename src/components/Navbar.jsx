@@ -51,13 +51,13 @@ const Navbar = () => {
 
       {/* Small screen navigation  */}
       <div className="sm:hidden flex justify-between items-center relative">
-        <div className="w-[40px] h-[40px] rounded-[10px] bg-[#2c2f32] flex justify-center items-center cursor-pointer">
+        {/* <div className="w-[40px] h-[40px] rounded-[10px] bg-[#2c2f32] flex justify-center items-center cursor-pointer">
           <img
             src={logo}
             alt="user"
             className="w-[60%] h-[60%] object-contain"
           />
-        </div>
+        </div> */}
         <img
           src={menu}
           alt="menu"
@@ -74,7 +74,7 @@ const Navbar = () => {
             {navlinks.map((link) => (
               <li
                 key={link.name}
-                className={`flex p-4 ${
+                className={`cursor-pointer flex p-4 ${
                   isActive === link.name && 'bg-[#3a3a43]'
                 }`}
                 onClick={() => {
@@ -86,13 +86,13 @@ const Navbar = () => {
                 <img
                   src={link.imgUrl}
                   alt={link.name}
-                  className={`w-[24px] h-[24px] object-contain ${
+                  className={`cursor-pointer w-[24px] h-[24px] object-contain ${
                     isActive === link.name ? 'grayscale-0' : 'grayscale'
                   }`}
                 />
                 <p
                   className={`ml-[20px] font-epilogue font-semibold text-[14px] ${
-                    isActive === link.name ? 'text-[#1dc071]' : 'text-[#808191]'
+                    isActive === link.name ? 'text-[#ffaa0c]' : 'text-[#808191]'
                   }`}
                 >
                   {link.name}
@@ -105,7 +105,7 @@ const Navbar = () => {
             <CustomButton
               btnType="button"
               title={address ? 'Create a campaign' : 'Connect'}
-              styles={address ? 'bg-[#1dc071]' : 'bg-[#8c6dfd]'}
+              styles={address ? 'bg-[#ffaa0c]' : 'bg-[#ffaa0c]'}
               handleClick={() => {
                 if (address) navigate('create-campaign');
                 else connect();
