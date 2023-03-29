@@ -1,3 +1,5 @@
+/*This page is the home page of the application
+ */
 import React, { useState, useEffect } from 'react';
 
 import { DisplayCampaigns } from '../components';
