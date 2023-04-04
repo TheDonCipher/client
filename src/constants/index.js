@@ -19,10 +19,10 @@ export const navlinks = [
     link: '/create-campaign',
   },
   {
-    name: 'payment',
+    name: 'voting',
     imgUrl: payment,
-    link: '/',
-    disabled: true,
+    link: '/voting-page',
+    //disabled: true,
   },
   {
     name: 'withdraw',

@@ -19,6 +19,11 @@ export const StateContextProvider = ({ children }) => {
     'createCampaign'
   );
 
+  const { mutateAsync: createProposal } = useContractWrite(
+    contract,
+    'createProposal'
+  );
+
   const address = useAddress();
   const connect = useMetamask();
 
@@ -91,6 +96,55 @@ export const StateContextProvider = ({ children }) => {
     return parsedDonations;
   };
 
+  const createNewProposal = async (description) => {
+    try {
+      const data = await createProposal([description]);
+      console.log('contract call success', data);
+    } catch (error) {
+      console.log('Failed to create proposal:', error);
+    }
+  };
+
+  const getProposals = async () => {
+    const proposals = await contract.call('getProposals');
+
+    const parsedProposals = proposals.map((proposal, i) => ({
+      description: proposal.description,
+      votesFor: proposal.votesFor?.toNumber() || 0,
+      votesAgainst: proposal.votesAgainst?.toNumber() || 0,
+      voted: proposal.voted,
+      pId: i,
+      open: proposal.open,
+    }));
+
+    return parsedProposals;
+  };
+
+  const vote = async (pId, vote) => {
+    try {
+      const data = await contract.call('vote', pId, vote);
+      console.log('contract call success', data);
+    } catch (error) {
+      console.log('Failed to vote:', error);
+    }
+  };
+
+  const closeProposal = async (pId) => {
+    try {
+      const data = await contract.call('closeProposal', pId);
+      window.location.reload();
+      console.log('contract call success', data);
+    } catch (error) {
+      console.log('Failed to close proposal:', error);
+      alert('Failed to close proposal, you might not be the creator!');
+    }
+  };
+
+  const getProposalResult = async (pId) => {
+    const result = await contract.call('getProposalResult', pId);
+    return result;
+  };
+
   return (
     <StateContext.Provider
       value={{
@@ -102,6 +156,11 @@ export const StateContextProvider = ({ children }) => {
         getUserCampaigns,
         donate,
         getDonations,
+        getProposals,
+        createNewProposal,
+        vote,
+        closeProposal,
+        getProposalResult,
       }}
     >
       {children}

@@ -124,7 +124,7 @@ const CampaignDetails = () => {
                       {index + 1}. {item.donator}
                     </p>
                     <p className="font-epilogue font-normal text-[16px] text-[#808191] leading-[26px] break-11">
-                      {item.donation}
+                      {item.donation} MATIC
                     </p>
                   </div>
                 ))
@@ -149,7 +149,7 @@ const CampaignDetails = () => {
             <div className="mt-[30px]">
               <input
                 type="number"
-                placeholder="ETH 0.1"
+                placeholder="MATIC Amount"
                 step="0.01"
                 className="w-full py-[10px] sm:px-[20px] px-[15px] outline-none border-[1px] border-[#3a3a43] bg-transparent font-epilogue text-white text-[18px] leading-[30px] placeholder:text-[#4b5264] rounded-[10px]"
                 value={amount}
