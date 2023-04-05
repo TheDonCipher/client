@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { ethers } from 'ethers';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import { useStateContext } from '../context';
 import { CountBox, CustomButton, Loader } from '../components';
@@ -33,11 +35,24 @@ const CampaignDetails = () => {
     await donate(state.pId, amount);
 
     setIsLoading(false);
+    toast.success('Donation successful');
   };
 
   return (
     <div>
       {isLoading && <Loader />}
+      <ToastContainer
+        position="bottom-center"
+        autoClose={6500}
+        hideProgressBar
+        newestOnTop
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable={false}
+        pauseOnHover
+        theme="dark"
+      />
 
       <div className="w-full flex md:flex-row flex-col mt-10 gap-[30px]">
         <div className="flex flex-col">

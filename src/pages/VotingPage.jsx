@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useStateContext } from '../context';
 import { Loader } from '../components';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function VotingPage() {
   const [isLoading, setIsLoading] = useState(false);
@@ -30,8 +32,11 @@ function VotingPage() {
     if (contract) fetchProposals();
   }, [address, contract]);
 
-  function handleCreateProposal() {
-    createNewProposal(description);
+  async function handleCreateProposal() {
+    setIsLoading(true);
+    await createNewProposal(description);
+    setIsLoading(false);
+    toast.success('Proposal created successfully');
     setDescription('');
   }
 
@@ -40,6 +45,7 @@ function VotingPage() {
     await vote(selectedProposalId, selectedVote);
     setSelectedVote('');
     setIsLoading(false);
+    toast.success('Vote submitted successfully');
   }
 
   function handleSelectProposal(pId) {
@@ -48,23 +54,40 @@ function VotingPage() {
     setDescription(selectedProposal.description);
   }
 
-  function handleCloseProposal(pId) {
-    closeProposal(pId);
+  async function handleCloseProposal(pId) {
+    setIsLoading(true);
+    await closeProposal(pId);
+    setIsLoading(false);
+    toast.success('Proposal closed successfully');
   }
 
-  async function handleGetProposalResult(pId) {
+  async function handleGetProposalResult(pId, description) {
     const result = await getProposalResult(pId);
-    alert(`Yes: ${result[0]} No: ${result[1]} Abstain: ${result[2]}`);
+    toast(
+      `Proposal "${description}" - Yes: ${result[0]} No: ${result[1]} Abstain: ${result[2]}`
+    );
   }
 
   return (
     <main class="flex flex-col md:flex-row items-start p-10 md:p-16 bg-gray-900 rounded-lg">
       {isLoading && <Loader />}
+      <ToastContainer
+        position="bottom-center"
+        autoClose={6500}
+        hideProgressBar
+        newestOnTop
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable={false}
+        pauseOnHover
+        theme="dark"
+      />
       <div class="w-full md:w-1/2 lg:w-1/3 p-6 md:p-8 mb-6 md:mr-6 bg-gray-800 rounded-lg shadow-md">
         <h2 class="font-epilogue text-white text-2xl font-bold mb-4">
           Create a Proposal
         </h2>
-        <form class="flex flex-col" onSubmit={handleCreateProposal}>
+        <div class="flex flex-col">
           <label class="sr-only" for="proposal-description">
             Proposal Description
           </label>
@@ -78,18 +101,18 @@ function VotingPage() {
           />
           <button
             class="font-epilogue bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded-lg"
-            type="submit"
+            onClick={handleCreateProposal}
           >
             Create Proposal
           </button>
-        </form>
+        </div>
       </div>
 
       <section class="w-full md:w-1/2 lg:w-2/3 p-6 md:p-8 bg-gray-800 rounded-lg shadow-md">
         <div class="w-full order-1 mb-4">
           {selectedProposalId && (
-            <div class="bg-white shadow-md rounded px-8 pt-6 pb-8">
-              <h2 class="font-epilogue text-2xl font-bold mb-4">
+            <div class="bg-[#1c1c24] shadow-md rounded px-8 pt-6 pb-8">
+              <h2 class="font-epilogue text-[#808191] text-medium mb-4">
                 Vote on Proposal - {description}
               </h2>
               <select
@@ -120,29 +143,21 @@ function VotingPage() {
             Proposals
           </h2>
         </header>
-        <ul>
+        <ul className="divide-y divide-gray-200">
           {proposals &&
             proposals.map((proposal) => (
               <article
                 key={proposal.pId}
-                class="mb-6 p-6 bg-gray-700 rounded-lg"
+                className="bg-[#8c6dfd] rounded-lg shadow-md hover:shadow-lg transition duration-300 ease-in-out mb-6 p-6"
               >
-                <h3 class="font-epilogue text-lg font-bold mb-2 text-white">
+                <h3 className="font-epilogue text-lg font-semibold text-gray-900 mb-2">
                   {proposal.description}
                 </h3>
-                {/* <p class="font-epilogue mb-2 text-white">
-                  Yes Votes: {proposal.yesVotes}
-                </p>
-                <p class="font-epilogue mb-2 text-white">
-                  No Votes: {proposal.noVotes}
-                </p>
-                <p class="font-epilogue mb-2 text-white">
-                  Abstain Votes: {proposal.abstainVotes}
-                </p> */}
+
                 {proposal.open ? (
-                  <div class="flex">
+                  <div className="flex justify-end">
                     <button
-                      class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded mr-4"
+                      className="font-epilogue bg-transparent hover:outline-1 text-gray-900 font-bold py-2 px-4 rounded mr-4 outline outline-offset-2 outline-2"
                       onClick={() => {
                         handleSelectProposal(proposal.pId);
                         window.scrollTo(0, 0); // scroll to top
@@ -151,7 +166,7 @@ function VotingPage() {
                       Vote
                     </button>
                     <button
-                      class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
+                      className="font-epilogue bg-transparent hover:outline-1 text-gray-900 font-bold py-2 px-4 rounded outline outline-offset-2 outline-2"
                       onClick={() => handleCloseProposal(proposal.pId)}
                     >
                       Close
@@ -159,10 +174,15 @@ function VotingPage() {
                   </div>
                 ) : (
                   <button
-                    class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded"
-                    onClick={() => handleGetProposalResult(proposal.pId)}
+                    className="font-epilogue bg-transparent hover:outline-1 text-gray-900 font-bold py-2 px-4 rounded outline outline-offset-2 outline-2"
+                    onClick={() =>
+                      handleGetProposalResult(
+                        proposal.pId,
+                        proposal.description
+                      )
+                    }
                   >
-                    Result
+                    Show Results
                   </button>
                 )}
               </article>
